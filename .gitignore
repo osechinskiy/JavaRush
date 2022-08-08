@@ -1,0 +1,10 @@
+#############
+## Idea
+#############
+target/
+.log
+.1
+.idea/
+.DS_Store
+.idea
+/lib/
