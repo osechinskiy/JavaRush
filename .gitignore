@@ -2,9 +2,10 @@
 ## Idea
 #############
 target/
-.log
-.1
+out.log
+out.log.1
 .idea/
 .DS_Store
 .idea
 /lib/
+out.log
