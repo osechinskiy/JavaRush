@@ -24,6 +24,18 @@ public class Hippodrome {
         horses.add(new Horse("Гиря", 3, 0));
         game = new Hippodrome(horses);
     }
+
+    public void run(){
+
+    }
+
+    public void move(){
+
+    }
+
+    public void print(){
+
+    }
 }
 
 
