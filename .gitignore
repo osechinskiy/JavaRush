@@ -3,8 +3,15 @@
 #############
 target/
 *.log
+<<<<<<< HEAD
 *.log.1
 .idea/
 .DS_Store
 .idea
+=======
+*.log.1
+.idea/
+.DS_Store
+.idea
+>>>>>>> de45addc27e08ac06114e85c55232d387cf70c4e
 /lib/
