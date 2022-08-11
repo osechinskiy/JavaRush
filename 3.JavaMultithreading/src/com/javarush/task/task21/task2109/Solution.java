@@ -56,7 +56,7 @@ public class Solution {
             return new C (getI(), getJ(), getName());
         }
     }
-    
+
     public static void main(String[] args) {
 
     }
