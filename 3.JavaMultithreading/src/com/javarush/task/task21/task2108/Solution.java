@@ -47,7 +47,7 @@ public class Solution {
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
-            return super.clone();
+            return new Tree(getName(), branches == null ? null : branches.clone());
         }
     }
 }
