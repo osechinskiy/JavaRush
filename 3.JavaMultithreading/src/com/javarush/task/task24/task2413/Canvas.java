@@ -1,8 +1,13 @@
 package com.javarush.task.task24.task2413;
 
+/**
+ * Класс-холст для отрисовки.
+ */
 public class Canvas {
+    //ширина и высота
     private int width;
-    private  int height;
+    private int height;
+    //матрица, где рисуем. символ - это цвет.
     private char[][] matrix;
 
     public Canvas(int width, int height) {
@@ -11,31 +16,33 @@ public class Canvas {
         this.matrix = new char[height + 2][width + 2];
     }
 
-    public int getWidth() {
-        return width;
+    /**
+     * Очищаем холст
+     */
+    void clear() {
+        this.matrix = new char[height + 2][width + 2];
     }
 
-    public int getHeight() {
-        return height;
+    /**
+     * Печатаем переданную фигуру в указанных координатах цветом c.
+     * Если переданный массив содержит единицы, то на холсте им будут соответствовать символы - с.
+     */
+    void drawMatrix(double x, double y, int[][] matrix, char c) {
+        int height = matrix.length;
+        int width = matrix[0].length;
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (matrix[i][j] == 1)
+                    setPoint(x + j, y + i, c);
+            }
+        }
     }
 
-    public char[][] getMatrix() {
-        return matrix;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setMatrix(char[][] matrix) {
-        this.matrix = matrix;
-    }
-
-    void setPoint(double x, double y, char c){
+    /**
+     * Ставим одну точку на холсте с координатами (x,y) и цветом - c.
+     */
+    void setPoint(double x, double y, char c) {
         int x0 = (int) Math.round(x);
         int y0 = (int) Math.round(y);
         if (y0 < 0 || y0 >= matrix.length) return;
@@ -44,23 +51,12 @@ public class Canvas {
         matrix[y0][x0] = c;
     }
 
-    void drawMatrix(double x, double y, int[][] matrix, char c){
-        int height = matrix.length;
-        int width = matrix[0].length;
+    /**
+     * Печатаем содержимое холста на экран.
+     */
+    void print() {
+        System.out.println();
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (matrix[i][j] != 0)
-                    setPoint(x + j, y + i, c);
-            }
-        }
-    }
-
-    public void clear(){
-        this.matrix = new char[this.height + 2][this.width + 2];
-    }
-
-    public void print(){
         for (int i = 0; i < height + 2; i++) {
             for (int j = 0; j < width + 2; j++) {
                 System.out.print(" ");
@@ -74,5 +70,17 @@ public class Canvas {
         System.out.println();
         System.out.println();
         System.out.println();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public char[][] getMatrix() {
+        return matrix;
     }
 }
