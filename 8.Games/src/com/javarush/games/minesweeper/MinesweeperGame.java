@@ -13,6 +13,9 @@ public class MinesweeperGame extends Game {
     private static final String MINE = "\uD83D\uDCA3";
     private static final String FLAG = "\uD83D\uDEA9";
     private int countFlags;
+    private boolean isGameStopped;
+    private int countClosedTiles = SIDE * SIDE;
+    private int score;
 
 
     @Override
@@ -29,7 +32,8 @@ public class MinesweeperGame extends Game {
                     countMinesOnField++;
                 }
                 gameField[y][x] = new GameObject(x, y, isMine);
-                setCellColor(x, y, Color.ORANGE);
+                setCellColor(x, y, Color.DARKSLATEGRAY);
+                setCellValue(x, y, "");
             }
         }
         countMineNeighbors();
@@ -72,25 +76,85 @@ public class MinesweeperGame extends Game {
 
     private void openTile(int x, int y){
         GameObject gameObject = gameField[y][x];
-        gameObject.isOpen = true;
-        setCellColor(x, y, Color.GREEN);
-        if (gameObject.isMine) {
-            setCellValue(gameObject.x, gameObject.y, MINE);
-        } else if (gameObject.countMineNeighbors == 0) {
-            setCellValue(gameObject.x, gameObject.y, "");
-            List<GameObject> neighbors = getNeighbors(gameObject);
-            for (GameObject neighbor : neighbors) {
-                if (!neighbor.isOpen) {
-                    openTile(neighbor.x, neighbor.y);
-                }
-            }
+        if(gameObject.isOpen || gameObject.isFlag || isGameStopped){
+            return;
         } else {
-            setCellNumber(x, y, gameObject.countMineNeighbors);
+            gameObject.isOpen = true;
+            setCellColor(x, y, Color.ORANGE);
+            countClosedTiles--;
+            if (gameObject.isMine) {
+                //setCellValue(gameObject.x, gameObject.y, MINE);
+                setCellValueEx(gameObject.x, gameObject.y, Color.RED, MINE);
+                gameOver();
+                return;
+            } else if (gameObject.countMineNeighbors == 0) {
+                setCellValue(gameObject.x, gameObject.y, "");
+                setCellColor(gameObject.x, gameObject.y, Color.DARKORANGE);
+                List<GameObject> neighbors = getNeighbors(gameObject);
+                for (GameObject neighbor : neighbors) {
+                    if (!neighbor.isOpen) {
+                        openTile(neighbor.x, neighbor.y);
+                    }
+                }
+            } else {
+                setCellNumber(x, y, gameObject.countMineNeighbors);
+            }
+            score += 5;
+            setScore(score);
+            if (countClosedTiles == countMinesOnField) {
+                win();
+            }
+        }
+    }
+    private void markTile(int x, int y) {
+        GameObject gameObject = gameField[y][x];
+
+        if (gameObject.isOpen || (!gameObject.isFlag && countFlags == 0) || isGameStopped) {
+            return;
+        }
+        if (gameObject.isFlag) {
+            gameObject.isFlag = false;
+            countFlags++;
+            setCellValue(x, y, "");
+            setCellColor(x, y, Color.DARKSLATEGRAY);
+        } else {
+            gameObject.isFlag = true;
+            countFlags--;
+            setCellValue(x, y, FLAG);
+            setCellColor(x, y, Color.ORANGERED);
         }
     }
 
     @Override
     public void onMouseLeftClick(int x, int y) {
+        if (isGameStopped) {
+            restart();
+            return;
+        }
        openTile(x, y);
+    }
+
+    @Override
+    public void onMouseRightClick(int x, int y) {
+      markTile(x, y);
+    }
+
+    private void gameOver(){
+        isGameStopped = true;
+        showMessageDialog(Color.ALICEBLUE, "GAME OVER!", Color.BLACK, 25);
+    }
+    private void win(){
+        isGameStopped = true;
+        showMessageDialog(Color.ALICEBLUE, "WELL DONE DUDE!!", Color.BLACK, 25);
+    }
+
+    private void restart(){
+        isGameStopped = false;
+        countClosedTiles = SIDE * SIDE;
+        score = 0;
+        countMinesOnField = 0;
+        setScore(score);
+        createGame();
+
     }
 }
